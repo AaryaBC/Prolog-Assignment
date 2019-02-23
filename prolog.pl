@@ -81,3 +81,31 @@ larger-num-than-current-given([HEAD|TAIL], CURRENT, VALUE, HEAD) :-
 
 larger-num-than-current-given([_|TAIL], CURRENT, VALUE, TARGET) :-
     larger-num-than-current-given(TAIL, CURRENT, VALUE, TARGET).
+
+%DONE
+
+common-unique-elements([], _, []).
+
+common-unique-elements([HEAD|TAIL], LIST2, [HEAD|TAIL2]) :- 
+    not(check-for-nested(HEAD, TAIL)),
+    check-for-nested(HEAD, LIST2),
+    common-unique-elements(TAIL, LIST2, TAIL2).
+
+common-unique-elements([HEAD|TAIL], LIST2, JOINLIST) :-
+    is_list(HEAD),
+    common-unique-elements(HEAD, LIST2, NESTEDLIST),
+    common-unique-elements(TAIL, LIST2, TAIL2),
+    append(NESTEDLIST, TAIL2, JOINLIST). 
+
+common-unique-elements([_|TAIL], LIST2, TAIL2) :-   
+    common-unique-elements(TAIL, LIST2, TAIL2).
+
+check-for-nested(SINGLE, [SINGLE|_]).
+
+check-for-nested(NESTED, [VAL|LIST]) :-
+    is_list(VAL),
+    check-for-nested(NESTED, VAL);
+    check-for-nested(NESTED,LIST).  
+
+check-for-nested(NESTED, [_|LIST]) :-
+    check-for-nested(NESTED, LIST).
